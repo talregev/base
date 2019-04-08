@@ -28,7 +28,7 @@
 #include <gazebo/common/Events.hh>
 
 #include <gazebo/sensors/SensorManager.hh>
-#include <gazebo/math/Pose.hh>
+#include <ignition/math/Pose3.hh>
 
 // Ice
 #include <easyiceconfig/EasyIce.h>
@@ -37,6 +37,7 @@
 // debug
 #include <quadrotor/debugtools.h>
 
+using namespace ignition;
 
 GZ_REGISTER_MODEL_PLUGIN(kinect::KinectPlugin)
 
@@ -138,14 +139,14 @@ KinectPlugin::LoadSensors(gazebo::physics::ModelPtr _model){
 
 void
 KinectPlugin::_on_pose_update(){
-	gazebo::math::Pose pose = model->GetWorldPose();
-	ice_pose3ddata = new jderobot::Pose3DData(pose.pos.x, pose.pos.y, pose.pos.z, 1, pose.rot.w, pose.rot.x, pose.rot.y, pose.rot.z);
+	math::Pose3d pose = model->WorldPose();
+	ice_pose3ddata = new jderobot::Pose3DData(pose.Pos().X(), pose.Pos().Y(), pose.Pos().Z(), 1, pose.Rot().W(), pose.Rot().X(), pose.Rot().Y(), pose.Rot().Z());
 }
 
 #ifdef PARENT_SENSOR_GETS_UPDATES
 void
 KinectPlugin::_on_cam_bootstrap(){
-	camera_sensor->DisconnectUpdated(sub_camera);
+	camera_sensor.reset();
 
 	if (img_depth.empty()){
 		std::cout <<  _log_prefix << "\tbootstrap depth camera" << std::endl;
@@ -279,9 +280,9 @@ KinectPlugin::getPose3DData ( const Ice::Current& ){
 Ice::Int
 KinectPlugin::setPose3DData ( const jderobot::Pose3DDataPtr & pose3dData,
                                      const Ice::Current& ){
-	gazebo::math::Pose pose(
-		gazebo::math::Vector3(pose3dData->x, pose3dData->y, pose3dData->z),
-		gazebo::math::Quaternion(pose3dData->q0, pose3dData->q1, pose3dData->q2, pose3dData->q3)
+	math::Pose3d pose(
+		math::Vector3d(pose3dData->x, pose3dData->y, pose3dData->z),
+		math::Quaterniond(pose3dData->q0, pose3dData->q1, pose3dData->q2, pose3dData->q3)
 	);
 
 	model->SetWorldPose(pose);

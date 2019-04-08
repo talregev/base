@@ -29,6 +29,7 @@
 
 #include <quadrotor/quadrotorsensors.hh>
 
+using namespace ignition;
 
 namespace quadrotor{
 
@@ -46,7 +47,7 @@ public:
     void takeoff();
     void land();
     void setTargetVelocity(gazebo::math::Twist twist);
-    void teleport(gazebo::math::Pose pose);
+    void teleport(math::Pose3d pose);
 
     std::string _log_prefix;
 

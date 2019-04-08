@@ -1,6 +1,6 @@
 #include <boost/bind.hpp>
 #include <gazebo/gazebo.hh>
-#include <gazebo/math/Angle.hh>
+#include <ignition/math/Angle.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <gazebo/transport/transport.hh>
@@ -13,6 +13,8 @@
 #include <Ice/Ice.h>
 #include <IceUtil/IceUtil.h>
 #include <easyiceconfig/EasyIce.h>
+
+using namespace ignition;
 
 namespace gazebo {
     class Motors : public ModelPlugin
